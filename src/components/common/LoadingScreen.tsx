@@ -7,37 +7,10 @@ interface LoadingScreenProps {
   variant?: 'flame' | 'scroll' | 'combat' | 'souls';
 }
 
-// Loading messages by category
-const loadingMessages = {
-  general: [
-    "Kindling the flames...",
-    "Gathering ancient power...",
-    "Channeling dark magic...",
-    "Forging your destiny..."
-  ],
-  combat: [
-    "Preparing your deck...",
-    "Summoning opponents...",
-    "Aligning the battlefield...",
-    "Awakening card spirits..."
-  ],
-  collection: [
-    "Gathering your cards...",
-    "Unlocking treasures...",
-    "Reading ancient scrolls...",
-    "Consulting the archives..."
-  ],
-  auth: [
-    "Verifying your soul...",
-    "Opening the gates...",
-    "Checking credentials...",
-    "Securing the realm..."
-  ]
-};
-
 // Animation variants for different loading icons
 const iconVariants: Variants = {
   flame: {
+    initial: { scale: 1, opacity: 0.5 },
     animate: {
       scale: [1, 1.2, 1],
       opacity: [0.5, 1, 0.5],
@@ -49,8 +22,9 @@ const iconVariants: Variants = {
     }
   },
   scroll: {
+    initial: { rotateZ: 0 },
     animate: {
-      rotateZ: [0, 360],
+      rotateZ: 360,
       transition: {
         duration: 3,
         repeat: Infinity,
@@ -59,6 +33,7 @@ const iconVariants: Variants = {
     }
   },
   combat: {
+    initial: { x: 0, rotateZ: 0 },
     animate: {
       x: [-20, 20],
       rotateZ: [-10, 10],
@@ -71,6 +46,7 @@ const iconVariants: Variants = {
     }
   },
   souls: {
+    initial: { y: 0, opacity: 0.5 },
     animate: {
       y: [-10, 10],
       opacity: [0.5, 1],
@@ -88,7 +64,6 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
   message,
   variant = 'flame'
 }) => {
-  const [randomMessage, setRandomMessage] = useState('');
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const messages = message ? [message] : loadingMessages.general;
 
@@ -120,6 +95,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
               <motion.div
                 key={i}
                 className="absolute"
+                initial={{ y: 0, opacity: 0.3 }}
                 animate={{
                   y: [-20, 20],
                   opacity: [0.3, 0.7],
@@ -131,7 +107,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
                   delay: i * 0.3,
                 }}
               >
-                <Flame className={`w-16 h-16 text-ember opacity-${30 + (i * 20)}`} />
+                <Flame className="w-16 h-16 text-ember" style={{ opacity: 0.3 + (i * 0.2) }} />
               </motion.div>
             ))}
           </div>
@@ -146,18 +122,14 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
       exit={{ opacity: 0 }}
       className="fixed inset-0 bg-dark-bg z-50 flex flex-col items-center justify-center"
     >
-      {/* Background Pattern */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-dark-gray/20 to-transparent" />
-      
-      {/* Loading Icon */}
       <motion.div
         variants={iconVariants[variant]}
+        initial="initial"
         animate="animate"
       >
         {getLoadingIcon()}
       </motion.div>
       
-      {/* Message */}
       <motion.div
         key={currentMessageIndex}
         initial={{ opacity: 0, y: 10 }}
@@ -166,45 +138,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
         className="mt-6 text-gold font-serif text-xl"
       >
         {messages[currentMessageIndex]}
-        <motion.span
-          animate={{
-            opacity: [0, 1, 0],
-          }}
-          transition={{
-            duration: 1.5,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        >
-          ...
-        </motion.span>
       </motion.div>
-
-      {/* Runes/Decorative Elements */}
-      <div className="absolute inset-0 pointer-events-none">
-        {[...Array(4)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute"
-            style={{
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              transform: `rotate(${i * 90}deg)`,
-            }}
-            animate={{
-              opacity: [0.1, 0.3, 0.1],
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              delay: i * 0.5,
-            }}
-          >
-            <div className="w-12 h-12 border-2 border-gold/20 rounded-full" />
-          </motion.div>
-        ))}
-      </div>
     </motion.div>
   );
 };

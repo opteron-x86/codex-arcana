@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Shield, User, Lock, Mail, ArrowLeft } from 'lucide-react';
+import { Shield, User, Lock, Mail } from 'lucide-react';
 import { useAuth } from '../AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const AuthForms = () => {
   const [isSignUp, setIsSignUp] = useState(false);
-  const [verificationSent, setVerificationSent] = useState(false);
+  const [setVerificationSent] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
     email: '',

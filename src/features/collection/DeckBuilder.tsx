@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Filter, Save, Trash, Plus, AlertCircle, X, ChevronLeft } from 'lucide-react';
+import { Search,  Save, Trash,  AlertCircle, ChevronLeft } from 'lucide-react';
 import GameCard from '../../components/game/GameCard';
 import type { DeckBuilderProps, CardType, DeckType, DeckValidation } from '../../types/game';
 import { validateDeck, calculateDeckPowerRating } from '../../types/game';

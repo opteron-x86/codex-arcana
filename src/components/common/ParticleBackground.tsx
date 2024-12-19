@@ -1,10 +1,7 @@
-import React from 'react';
 import { useCallback } from "react";
-import { motion } from "framer-motion";
-import { Engine } from "tsparticles-engine";
-import type { Container } from "tsparticles-engine";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
+import type { Engine } from "@tsparticles/engine";
 
 const ParticleBackground = () => {
   const particlesInit = useCallback(async (engine: Engine) => {
