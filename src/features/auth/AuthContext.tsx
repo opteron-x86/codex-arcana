@@ -3,8 +3,20 @@ import { getCurrentUser, signIn, signOut, signUp } from 'aws-amplify/auth';
 import { Hub } from 'aws-amplify/utils';
 import type { SignUpInput } from 'aws-amplify/auth';
 
-interface AuthContextType {
-  user: any | null;
+// types/auth.ts
+export interface AuthUser {
+  id: string;
+  username: string;
+  email: string;
+  attributes?: {
+    email_verified: boolean;
+    sub: string;
+    [key: string]: any;
+  };
+}
+
+export interface AuthContextType {
+  user: AuthUser | null;
   isLoading: boolean;
   isAuthenticated: boolean;
   error: string | null;
@@ -12,6 +24,10 @@ interface AuthContextType {
   signup: (input: SignUpInput) => Promise<void>;
   logout: () => Promise<void>;
   clearError: () => void;
+}
+
+export interface AuthProviderProps {
+  children: React.ReactNode;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
