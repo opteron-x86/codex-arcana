@@ -7,8 +7,8 @@ import { Book, Plus } from 'lucide-react';
 import { usePlayerCollection } from '../features/collection/hooks/usePlayerCollection';
 
 const CollectionPage = () => {
-  const [selectedDeck, setSelectedDeck] = useState(null);
-  const [isBuilding, setIsBuilding] = useState(false);
+  const [selectedDeck, setSelectedDeck] = useState<DeckType | null>(null);
+  const [isBuilding, setIsBuilding] = useState<boolean>(false);
   const { user } = useAuth();
   const { 
     cards, 
@@ -41,7 +41,7 @@ const CollectionPage = () => {
     // Add more mock cards
   ];
 
-  const handleSaveDeck = async (deck) => {
+  const handleSaveDeck = (deck: DeckType) => {
     // Will implement Amplify save logic
     console.log('Saving deck:', deck);
     setIsBuilding(false);

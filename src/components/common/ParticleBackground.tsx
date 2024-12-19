@@ -1,7 +1,8 @@
 import React from 'react';
 import { useCallback } from "react";
 import { motion } from "framer-motion";
-import type { Container, Engine } from "tsparticles-engine";
+import { Engine } from "tsparticles-engine";
+import type { Container } from "tsparticles-engine";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 

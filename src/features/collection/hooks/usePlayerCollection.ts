@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { generateClient } from 'aws-amplify/data';
-import { schema } from '../../../../amplify/data/resource';
+import { Schema } from '../../../../amplify/data/resource';
 
 const client = generateClient<typeof schema>();
 
 export function usePlayerCollection(playerId: string) {
   const [loading, setLoading] = useState(true);
-  const [cards, setCards] = useState([]);
-  const [decks, setDecks] = useState([]);
-  const [error, setError] = useState(null);
+  const [cards, setCards] = useState<CardType[]>([]);
+  const [decks, setDecks] = useState<DeckType[]>([]);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     async function loadCollection() {
