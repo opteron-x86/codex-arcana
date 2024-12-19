@@ -34,7 +34,10 @@ amplifyconfiguration*
 .src/features/*
 .src/game/*
 .src/hooks/*
-.src/pages/*
-!.src/pages/Home.tsx
+.src/pages/Collection.tsx
+.src/pages/Game.tsx
+.src/pages/Leaderboard.tsx
+.src/pages/Profile.tsx
+.src/pages/Shop.tsx
 .src/providers/*
 .src/types/*
