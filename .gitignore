@@ -27,3 +27,14 @@ dist-ssr
 .amplify
 amplify_outputs*
 amplifyconfiguration*
+
+# temporary exclusions
+.src/assets/*
+.src/components/*
+.src/features/*
+.src/game/*
+.src/hooks/*
+.src/pages/*
+!.src/pages/Home.tsx
+.src/providers/*
+.src/types/*

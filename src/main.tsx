@@ -4,14 +4,11 @@ import { Amplify } from "aws-amplify";
 import App from "./App";
 import "./styles/globals.css";
 import config from "../amplify_outputs.json";
-import { AuthProvider } from "./features/auth/AuthContext";
 
 Amplify.configure(config);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <AuthProvider>
-      <App />
-    </AuthProvider>
+    <App />
   </React.StrictMode>
 );
