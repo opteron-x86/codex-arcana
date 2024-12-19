@@ -1,85 +1,130 @@
-import { useEffect, useState } from "react";
-import { useAuthenticator } from "@aws-amplify/ui-react";
-import type { Schema } from "../amplify/data/resource";
-import { generateClient } from "aws-amplify/data";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Frontpage from "./Frontpage";
-import Navbar from "./Navbar";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { useAuth } from "./features/auth/AuthContext";
+import { AnimatePresence } from "framer-motion";
+import DarkSoulsNav from "./components/layout/DarkSoulsNav";
+import HomePage from "./pages/Home";
+import GamePage from "./pages/Game";
+import CollectionPage from "./pages/Collection";
+import LeaderboardPage from "./pages/Leaderboard";
+import ShopPage from "./pages/Shop";
+import AuthForms from "./features/auth/components/AuthForms";
+import ParticleBackground from "./components/common/ParticleBackground";
+import LoadingScreen from "./components/common/LoadingScreen";
+import RouteTransition from "./components/common/RouteTransition";
+import { Flame } from "lucide-react";
 
+// AnimatePresence wrapper component
+const AnimatedRoutes = () => {
+  const location = useLocation();
+  
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        {/* Public Routes */}
+        <Route path="/" element={
+          <RouteTransition>
+            <HomePage />
+          </RouteTransition>
+        } />
+        
+        {/* Auth Routes */}
+        <Route path="/auth" element={
+          <AuthRoute>
+            <RouteTransition variant="combat">
+              <div className="relative min-h-screen bg-dark-bg">
+                <ParticleBackground />
+                <AuthForms />
+              </div>
+            </RouteTransition>
+          </AuthRoute>
+        } />
 
+        {/* Protected Routes */}
+        <Route path="/game" element={
+          <ProtectedRoute>
+            <RouteTransition variant="fade">
+              <GamePage />
+            </RouteTransition>
+          </ProtectedRoute>
+        } />
+        <Route path="/collection" element={
+          <ProtectedRoute>
+            <RouteTransition variant="scale">
+              <CollectionPage />
+            </RouteTransition>
+          </ProtectedRoute>
+        } />
+        <Route path="/leaderboard" element={
+          <ProtectedRoute>
+            <RouteTransition variant="scroll">
+              <LeaderboardPage />
+            </RouteTransition>
+          </ProtectedRoute>
+        } />
+        <Route path="/shop" element={
+          <ProtectedRoute>
+            <RouteTransition variant="slide">
+              <ShopPage />
+            </RouteTransition>
+          </ProtectedRoute>
+        } />
 
-const client = generateClient<Schema>();
+        {/* Catch all route */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </AnimatePresence>
+  );
+};
 
-function App() {
-  const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
-  const { user, signOut } = useAuthenticator();
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+}
 
-  useEffect(() => {
-    client.models.Todo.observeQuery().subscribe({
-      next: (data) => setTodos([...data.items]),
-    });
-  }, []);
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
+  const { isAuthenticated, isLoading } = useAuth();
 
-  function createTodo() {
-    client.models.Todo.create({ content: window.prompt("Todo content") });
+  if (isLoading) {
+    return <LoadingScreen message="Preparing Battle" />;
   }
 
-  function deleteTodo(id: string) {
-    client.models.Todo.delete({ id });
+  if (!isAuthenticated) {
+    return <Navigate to="/auth" replace />;
+  }
+
+  return <>{children}</>;
+};
+
+const AuthRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <LoadingScreen message="Checking Status" />;
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to="/game" replace />;
+  }
+
+  return <>{children}</>;
+};
+
+function App() {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <LoadingScreen message="Kindling the Flames" />;
   }
 
   return (
-    <main className="bg-dark-bg text-off-white min-h-screen p-6 font-serif flex flex-col">
-      {/* Navbar */}
-      <header className="flex justify-between items-center py-4 px-8 bg-dark-gray shadow-md">
-        <h1 className="text-gold text-3xl font-bold drop-shadow-lg">
-          {user?.signInDetails?.loginId}'s Chronicles
-        </h1>
-        <button
-          onClick={signOut}
-          className="bg-ember hover:bg-gold text-dark-bg px-6 py-2 rounded-full shadow-inner-glow hover:shadow-md transition-all duration-200"
-        >
-          Sign Out
-        </button>
-      </header>
-
-      {/* Todo Section */}
-      <section className="flex-grow container mx-auto mt-8">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold text-light-gray">Quests</h2>
-          <button
-            onClick={createTodo}
-            className="bg-gold hover:bg-light-gray text-dark-bg px-4 py-2 rounded-full shadow hover:shadow-lg transition-all duration-200"
-          >
-            + New Quest
-          </button>
-        </div>
-        <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {todos.map((todo) => (
-            <li
-              key={todo.id}
-              className="bg-dark-gray text-off-white p-4 rounded-md shadow hover:bg-medium-gray transition-all duration-200 cursor-pointer"
-              onClick={() => deleteTodo(todo.id)}
-            >
-              {todo.content}
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {/* Footer */}
-      <footer className="py-4 text-center bg-dark-gray mt-8 text-medium-gray">
-        <p>
-          🥳 Your adventure begins. Create new quests and explore the unknown.
-        </p>
-        <a
-          href="https://docs.amplify.aws/react/start/quickstart/#make-frontend-updates"
-          className="text-gold underline hover:text-off-white transition-all duration-200"
-        >
-          Learn more about this realm.
-        </a>
-      </footer>
-    </main>
+    <Router>
+      <div className="bg-dark-bg text-off-white min-h-screen flex">
+        {isAuthenticated && <DarkSoulsNav />}
+        
+        <main className={`flex-1 ${isAuthenticated ? 'ml-20' : ''}`}>
+          <AnimatedRoutes />
+        </main>
+      </div>
+    </Router>
   );
 }
 
