@@ -1,0 +1,34 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: ServerlessV2 Cluster
+Parameters:
+  MasterUsername:
+    Type: String
+  MasterUserPassword:
+    Type: String
+    NoEcho: true
+  DBClusterIdentifier:
+    Type: String
+  EngineVersion:
+    Type: String
+  MinCapacity:
+    Type: String
+  MaxCapacity:
+    Type: String
+Resources:
+  RDSDBCluster:
+    Type: 'AWS::RDS::DBCluster'
+    Properties:
+      Engine: aurora-postgresql
+      DBClusterIdentifier: !Ref DBClusterIdentifier
+      EngineVersion: !Ref EngineVersion
+      MasterUsername: !Ref MasterUsername
+      MasterUserPassword: !Ref MasterUserPassword
+      ServerlessV2ScalingConfiguration:
+        MinCapacity: !Ref MinCapacity
+        MaxCapacity: !Ref MaxCapacity
+  RDSDBInstance:
+    Type: 'AWS::RDS::DBInstance'
+    Properties:
+      Engine: aurora-postgresql
+      DBInstanceClass: db.serverless
+      DBClusterIdentifier: !Ref RDSDBCluster

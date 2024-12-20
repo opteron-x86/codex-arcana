@@ -1,0 +1,16 @@
+column_name,data_type,is_nullable,column_default
+id,uuid,NO,uuid_generate_v4()
+rarity,USER-DEFINED,NO,NULL
+power_rating,integer,NO,NULL
+is_active,boolean,YES,true
+release_date,timestamp with time zone,YES,CURRENT_TIMESTAMP
+created_at,timestamp with time zone,YES,CURRENT_TIMESTAMP
+tier,integer,YES,1
+values,jsonb,NO,NULL
+element,USER-DEFINED,YES,'none'::card_element
+name,character varying,NO,NULL
+description,text,YES,NULL
+set_id,character varying,NO,NULL
+set_name,character varying,NO,NULL
+image_url,text,YES,NULL
+animation_url,text,YES,NULL
