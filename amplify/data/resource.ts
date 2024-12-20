@@ -1,22 +1,31 @@
 // amplify/data/resource.ts
-import { a, defineSchema } from '@aws-amplify/backend';
+import { a } from '@aws-amplify/backend';
 
-const schema = defineSchema({
+export const schema = {
   Player: a.model({
     fields: {
-      id: a.id(),
+      userId: a.string().required(),
       username: a.string().required(),
       email: a.string().required()
+    },
+    authorization: {
+      rules: [
+        a.allow.owner().to(['read', 'update']),
+        a.allow.public().to(['read'])
+      ]
     }
   }),
 
   Card: a.model({
     fields: {
-      id: a.id(),
+      cardId: a.string().required(),
       name: a.string().required(),
       power: a.integer().required()
+    },
+    authorization: {
+      rules: [
+        a.allow.public().to(['read'])
+      ]
     }
   })
-});
-
-export { schema };
+};
