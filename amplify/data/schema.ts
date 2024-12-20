@@ -1,4 +1,9 @@
 // types/schema.ts
+export const config = {
+  databaseType: 'POSTGRESQL',
+  ...rdsConfig
+};
+
 export interface Player {
   id: string;
   username: string;

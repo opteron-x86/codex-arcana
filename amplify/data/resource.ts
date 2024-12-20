@@ -1,5 +1,34 @@
 import { type ClientSchema, a, defineData } from "@aws-amplify/backend";
 
+// Aurora PostgreSQL configuration
+export const rdsConfig = {
+  engine: 'postgres',
+  engineVersion: '13.7',
+  instanceType: 'serverless-v2',
+  minCapacity: 0.5,  // ACUs (Aurora Capacity Units)
+  maxCapacity: 8,    // ACUs
+  autoPause: true,   // Pause when no activity
+  maxIdle: 1800,     // Pause after 30 minutes of inactivity
+  storageEncrypted: true,
+  enablePerformanceInsights: true,
+  deletionProtection: true, // Prevent accidental deletion
+  backupRetentionPeriod: 7  // Days to retain backups
+};
+
+// Define configuration
+export const config = {
+  databaseType: 'POSTGRESQL',
+  replicas: 1,       // Number of read replicas
+  schema: 'public',  // PostgreSQL schema name
+  ...rdsConfig
+};
+
+// Export your schema
+export const schema = {
+  // Your schema definition will go here
+  // We'll define this in the next step
+} satisfies ClientSchema;
+
 /*== STEP 1 ===============================================================
 The section below creates a Todo database table with a "content" field. Try
 adding a new "isDone" field as a boolean. The authorization rule below
