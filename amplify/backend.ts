@@ -1,8 +1,9 @@
+// amplify/backend.ts
 import { defineBackend } from '@aws-amplify/backend';
-import { auth } from './auth/resource';
 import { schema } from './data/resource';
+import { auth } from './auth/resource';
 
-defineBackend({
+export const backend = defineBackend({
   auth,
-  schema,
+  schema
 });
