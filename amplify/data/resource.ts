@@ -1,56 +1,68 @@
-import { type ClientSchema, a } from '@aws-amplify/data-schema';
+import { a, defineSchema } from '@aws-amplify/backend';
 
-export const schema = {
+const schema = defineSchema({
   Player: a.model({
-    id: a.id(),
-    username: a.string().required(),
-    email: a.string().required(),
-    rank: a.number(),
-    souls: a.number(),
-    winCount: a.number(),
-    lossCount: a.number(),
-    cards: a.hasMany('PlayerCard'),
-    decks: a.hasMany('Deck'),
-    cosmetics: a.hasMany('PlayerCosmetic'),
-    matches: a.hasMany('Match')
+    fields: {
+      id: a.id(),
+      username: a.string().required(),
+      email: a.string().required(),
+      rank: a.integer(),
+      souls: a.integer(),
+      winCount: a.integer(),
+      lossCount: a.integer(),
+      cards: a.hasMany('PlayerCard', { relationName: 'PlayerCards' }),
+      decks: a.hasMany('Deck', { relationName: 'PlayerDecks' }),
+      cosmetics: a.hasMany('PlayerCosmetic', { relationName: 'PlayerCosmetics' }),
+      matches: a.hasMany('Match', { relationName: 'PlayerMatches' })
+    }
   }),
 
   Card: a.model({
-    id: a.id(),
-    name: a.string().required(),
-    values: a.json().required(),
-    element: a.string(),
-    rarity: a.string().required(),
-    image: a.string(),
-    playerCards: a.hasMany('PlayerCard')
+    fields: {
+      id: a.id(),
+      name: a.string().required(),
+      values: a.json().required(),
+      element: a.string(),
+      rarity: a.string().required(),
+      image: a.string(),
+      playerCards: a.hasMany('PlayerCard', { relationName: 'CardPlayers' })
+    }
   }),
 
   PlayerCard: a.model({
-    id: a.id(),
-    playerId: a.string().required(),
-    cardId: a.string().required(),
-    quantity: a.number().required(),
-    isInDeck: a.boolean(),
-    player: a.belongsTo('Player'),
-    card: a.belongsTo('Card')
+    fields: {
+      id: a.id(),
+      playerId: a.string().required(),
+      cardId: a.string().required(),
+      quantity: a.integer().required(),
+      isInDeck: a.boolean(),
+      player: a.belongsTo('Player', { relationName: 'PlayerCards' }),
+      card: a.belongsTo('Card', { relationName: 'CardPlayers' })
+    }
   }),
 
   Deck: a.model({
-    id: a.id(),
-    playerId: a.string().required(),
-    name: a.string().required(),
-    cards: a.hasMany('DeckCard'),
-    player: a.belongsTo('Player')
+    fields: {
+      id: a.id(),
+      playerId: a.string().required(),
+      name: a.string().required(),
+      cards: a.hasMany('DeckCard', { relationName: 'DeckCards' }),
+      player: a.belongsTo('Player', { relationName: 'PlayerDecks' })
+    }
   }),
 
   DeckCard: a.model({
-    id: a.id(),
-    deckId: a.string().required(),
-    playerCardId: a.string().required(),
-    deck: a.belongsTo('Deck'),
-    playerCard: a.belongsTo('PlayerCard')
+    fields: {
+      id: a.id(),
+      deckId: a.string().required(),
+      playerCardId: a.string().required(),
+      deck: a.belongsTo('Deck', { relationName: 'DeckCards' }),
+      playerCard: a.belongsTo('PlayerCard', { relationName: 'CardDecks' })
+    }
   })
-} satisfies ClientSchema<typeof schema>;
+});
+
+export { schema };
 
 // Database configuration
 export const config = {
