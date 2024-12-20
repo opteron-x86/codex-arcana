@@ -1,0 +1,35 @@
+{
+    "features": {
+      "graphqltransformer": {
+        "addMissingOwnerFields": true,
+        "improvePluralization": true,
+        "validateTypeNames": true,
+        "useExperimentalPipelinedTransformer": true,
+        "enableIterativeGsiUpdates": true,
+        "secondaryKeyAsGSI": true
+      },
+      "backend-deployment": {
+        "enableCrossRegionDatabaseAccess": true
+      },
+      "auth": {
+        "enableCaseInsensitivity": true,
+        "useEnabledMfas": true,
+        "breakthedependencycycle": true
+      }
+    },
+    "rds": {
+      "provisionStrategy": "serverless-v2",
+      "backupStrategy": {
+        "automated": true,
+        "retention": 7
+      },
+      "monitoring": {
+        "enableEnhancedMonitoring": true,
+        "enablePerformanceInsights": true
+      },
+      "networking": {
+        "enableIAMDatabaseAuthentication": true,
+        "publiclyAccessible": false
+      }
+    }
+  }
